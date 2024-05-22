@@ -124,7 +124,7 @@ public class Events implements Listener {
 		Player p = e.getPlayer();
 		if (Config.repairAutoEnabled && timeOut(p)) {
 			ItemStack i = e.getItem();
-			if (plugin.autoEnabled.contains(p) && i.getDurability() % 2 != 0) {
+			if (plugin.autoEnabled.containsKey(p.getUniqueId().toString()) && plugin.autoEnabled.get(p.getUniqueId().toString()) && i.getDurability() % 2 != 0) {
 				if (Config.canRepair(i)) {
 					MagicBottle mb = MagicBottle.getUsableMBInInventory(p.getInventory());
 					if (mb != null && !e.isCancelled()) {

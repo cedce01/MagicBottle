@@ -1,37 +1,79 @@
 plugins {
-    id 'com.github.johnrengelman.shadow' version '1.2.3'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 apply plugin: 'java'
+
+group = 'vontus.magicbottle'
+version '1.5.1'
 String packagePath = 'vontus.magicbottle'
 
-version '1.5.1'
 sourceCompatibility = 1.8
+
+repositories {
+    flatDir{
+        dirs 'libs'
+    }
+    mavenCentral()
+    maven {
+        name = "spigotmc-repo"
+        url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/"
+    }
+    maven {
+        name = "sonatype"
+        url = "https://oss.sonatype.org/content/groups/public/"
+    }
+
+
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url 'https://repo.bstats.org/content/repositories/releases/' }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://mvnrepository.com/artifact/org.bstats/bstats-bukkit'}
+}
 
 configurations {
     extraLibs
 }
+//
 
-repositories {
-    mavenCentral()
-    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
-    maven { url 'http://repo.bstats.org/content/repositories/releases/' }
-    maven { url 'http://nexus.hc.to/content/repositories/pub_releases' }
-    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
-}
+
 
 dependencies {
-    testCompile group: 'junit', name: 'junit', version: '4.12'
-    compile "org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT"
-    compile "net.milkbowl.vault:VaultAPI:1.6"
-    extraLibs "org.bstats:bstats-bukkit:1.2"
-    configurations.compile.extendsFrom(configurations.extraLibs)
+    compileOnly "org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT"
+    implementation name: 'VaultAPI-1.7.2'
+    compileOnly "org.bstats:bstats-bukkit:3.0.2"
 }
-
 shadowJar {
     dependencies {
         include dependency('org.bstats:bstats-bukkit')
     }
     relocate('org.bstats', packagePath + '.dependencies')
-    archiveName = "${baseName}-${version}-MC1.13.${extension}"
+//    archiveName = "${baseName}-${version}.${extension}"
+}
+
+def targetJavaVersion = 8
+java {
+    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
+    if (JavaVersion.current() < javaVersion) {
+        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
 }

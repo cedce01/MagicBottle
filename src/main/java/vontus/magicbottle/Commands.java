@@ -72,11 +72,18 @@ public class Commands implements CommandExecutor {
 	private void commandAutoRepair(Player p) {
 		if (Config.repairAutoEnabled) {
 			if (p.hasPermission(Config.permRepairAuto)) {
-				if (plugin.autoEnabled.add(p)) {
+				if(!plugin.autoEnabled.containsKey(p.getUniqueId().toString())){
+					plugin.autoEnabled.put(p.getUniqueId().toString(),true);
 					p.sendMessage(Messages.repairAutoEnabled);
-				} else {
-					plugin.autoEnabled.remove(p);
-					p.sendMessage(Messages.repairAutoDisabled);
+				}
+				else {
+					if (!plugin.autoEnabled.get(p.getUniqueId().toString())) {
+						plugin.autoEnabled.put(p.getUniqueId().toString(),true);
+						p.sendMessage(Messages.repairAutoEnabled);
+					} else {
+						plugin.autoEnabled.put(p.getUniqueId().toString(),false);
+						p.sendMessage(Messages.repairAutoDisabled);
+					}
 				}
 			} else {
 				p.sendMessage(Messages.msgUnauthorizedToUseCommand);
