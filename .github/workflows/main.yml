@@ -1,1 +1,27 @@
 
+            - name: Auto-assign Issue
+  # You may pin to the exact commit or the version.
+  # uses: pozil/auto-assign-issue@c5bca5027e680b9e8411b826d16947afd8c76b32
+  uses: pozil/auto-assign-issue@v2.0.0
+  with:
+    # The GITHUB_TOKEN, needed to update the Issue
+    repo-token: # optional, default is ${{ github.token }}
+    # Comma separated list of user names. Required if teams is not specified.
+    assignees: # optional
+    # Comma separated list of team names. Required if assignees is not specified.
+    teams: # optional
+    # Number of random assignee
+    numOfAssignee: # optional
+    # Flag that aborts the action if there were assignees previously.
+    abortIfPreviousAssignees: # optional
+    # Flag that removes assignees before assigning them (useful the issue is reasigned).
+    removePreviousAssignees: # optional
+    # Flag that prevents the action from failing when there are no assignees.
+    allowNoAssignees: # optional
+    # Flag that allows self-assignment to the issue author.
+    allowSelfAssign: # optional, default is true
+    # Manually specified issue (or PR) ID to be used instead of the one in the context.
+    issueNumber: # optional
+    # Flag that allows a team to be set as reviewer
+    teamIsPullRequestReviewer: # optional
+          
