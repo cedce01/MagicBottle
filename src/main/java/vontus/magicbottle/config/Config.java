@@ -1,12 +1,15 @@
 package vontus.magicbottle.config;
 
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import vontus.magicbottle.Plugin;
 import vontus.magicbottle.util.Exp;
 
+import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map.Entry;
@@ -23,6 +26,7 @@ public class Config {
 	public static final String permReload = "magicbottle.command.reload";
 	public static final String permRepair = "magicbottle.command.repair";
 	public static final String permRepairAuto = "magicbottle.command.repair.auto";
+	public static final String permRepairAutoContinuously = "magicbottle.command.repair.autoContinuously";
 	public static final String permCraftCostExempt = "magicbottle.action.craft.cost.exempt";
 	public static final String permDepositCostExempt = "magicbottle.action.deposit.cost.exempt";
 
@@ -36,6 +40,7 @@ public class Config {
 	public static boolean recipeNewBottleEnabled;
 	public static boolean repairEnabled;
 	public static boolean repairAutoEnabled;
+	public static boolean repairAutoContinuouslyEnabled;
 
 	private static int defaultRankMaxLevel;
 	public static int maxLevel = 20000;
@@ -46,7 +51,6 @@ public class Config {
 
 	public static Enchantment bottleEnchantment;
 	public static EnchantParser repairEnchantment;
-
 	public static void load(Plugin plugin) {
 		Config.plugin = plugin;
 		maxLevelsPermission = new HashMap<>();
@@ -65,6 +69,7 @@ public class Config {
 
 		repairEnabled = plugin.getConfig().getBoolean("repair.enabled");
 		repairAutoEnabled = plugin.getConfig().getBoolean("repair.auto");
+		repairAutoContinuouslyEnabled = plugin.getConfig().getBoolean("repair.continuously");
 
 		costPercentageDeposit = plugin.getConfig().getDouble("costs.deposit.exp-percentage") / 100;
 		costMoneyCraftNewBottle = plugin.getConfig().getDouble("costs.craft new bottle.money");
@@ -86,7 +91,7 @@ public class Config {
 //		} else {
 //			bottleEnchantment = EnchantGlow.getGlow();
 //		} TODO test
-		bottleEnchantment = Enchantment.DIG_SPEED;
+        bottleEnchantment = Enchantment.DURABILITY;
 	}
 
 	public static boolean canRepair(ItemStack is) {

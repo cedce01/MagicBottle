@@ -6,15 +6,27 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.json.JSONObject;
+import org.json.JSONArray;
+import org.json.simple.parser.JSONParser;
 import vontus.magicbottle.config.Config;
 import vontus.magicbottle.config.Messages;
 import vontus.magicbottle.util.Exp;
+
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.List;
+import java.util.Locale;
+import java.util.logging.Level;
+import java.util.stream.Collectors;
 
 public class Commands implements CommandExecutor {
 	private Plugin plugin;
 	
 	private final String USAGE_ABOUT = "/magicbottle about";
-	private final String USAGE_REPAIR = "/magicbottle repair [auto]";
+	private final String USAGE_REPAIR = "/magicbottle repair [auto|continuously]";
 	private final String USAGE_GIVE = "/magicbottle give <level> [amount] [player]";
 	private final String USAGE_RELOAD = "/magicbottle reload";
 
@@ -59,6 +71,8 @@ public class Commands implements CommandExecutor {
 			case 2:
 				if (args[1].equals("auto")) {
 					commandAutoRepair(p);
+				} else if (args[1].equals("continuously")) {
+					commandAutoRepairContinuously(p);
 				} else {
 					p.sendMessage(correctUse(USAGE_REPAIR));
 				}
@@ -69,6 +83,57 @@ public class Commands implements CommandExecutor {
 		}
 	}
 
+	private void commandAutoRepairContinuously(Player p){
+		if(Config.repairAutoContinuouslyEnabled){
+			if(p.hasPermission(Config.permRepairAutoContinuously)){
+				try{
+					File file = new File(plugin.getDataFolder() + "/repairContinuously.txt");
+					if(!file.exists()){
+						file.createNewFile();
+						BufferedWriter fw = new BufferedWriter(new FileWriter(file));
+						fw.write(p.getUniqueId().toString() + " " + p.getName() + "\n") ;
+						p.sendMessage(Messages.repairContinuouslyEnabled);
+						fw.close();
+					}
+					else{
+						BufferedReader fr = new BufferedReader(new FileReader(file));
+						List<String> list = fr.lines().collect(Collectors.toList());
+						fr.close();
+						boolean contained = false;
+						for (int i = 0; i < list.size(); i++) {
+							if(list.get(i).contains(p.getUniqueId().toString())){
+								contained = true;
+								list.remove(i);
+								p.sendMessage(Messages.repairContinuouslyDisabled);
+								break;
+							}
+						}
+						if(!contained){
+							BufferedWriter fw = new BufferedWriter(new FileWriter(file,true));
+							fw.write(p.getUniqueId().toString() + " " + p.getName() + "\n") ;
+							fw.close();
+							p.sendMessage(Messages.repairContinuouslyEnabled);
+						}else {
+							BufferedWriter fw = new BufferedWriter(new FileWriter(file, false));
+							for (String element: list){
+								fw.write(element);
+								fw.newLine();
+							}
+							fw.close();
+						}
+					}
+				}catch (Exception e){
+					e.printStackTrace();
+				}
+			}
+			else{
+				p.sendMessage(Messages.msgUnauthorizedToUseCommand);
+			}
+		}else {
+			p.sendMessage(Messages.repairAutoContinuouslyDisabledConfig);
+		}
+	}
+	
 	private void commandAutoRepair(Player p) {
 		if (Config.repairAutoEnabled) {
 			if (p.hasPermission(Config.permRepairAuto)) {

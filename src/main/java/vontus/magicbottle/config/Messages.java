@@ -1,5 +1,7 @@
 package vontus.magicbottle.config;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -37,14 +39,23 @@ public class Messages {
     public static ArrayList<String> newBottleLore;
     
     public static String repairInvRepaired;
-    public static String repairAutoEnabled;
-    public static String repairAutoDisabled;
+	public static String repairAutoEnabled;
+	public static String repairAutoDisabled;
+
+	public static String repairAutoWasEnabled;
+	public static String repairAutoWasDisabled;
+
+	public static String repairContinuouslyEnabled;
+	public static String repairContinuouslyDisabled;
     public static String repairDisabledConfig;
     public static String repairAutoDisabledConfig;
+	public static String repairAutoContinuouslyDisabledConfig;
     public static String repairMbNotInHand;
     
 	public static String msgNotEnoughMoney;
 
+
+	static File test;
 	public static void load(Plugin plugin) {
 		PluginFile lang = new PluginFile(plugin, "messages.yml");
 		file = lang.getConfig();
@@ -77,8 +88,15 @@ public class Messages {
         repairInvRepaired = prepMsg("messages.repair.inventory repaired");
         repairAutoEnabled = prepMsg("messages.repair.enabled autorepair");
         repairAutoDisabled = prepMsg("messages.repair.disabled autorepair");
+		repairAutoWasEnabled = prepMsg("messages.join.autorepair is enabled");
+		repairAutoWasDisabled = prepMsg("messages.join.autorepair is disabled");
         repairDisabledConfig = prepMsg("messages.repair.config repairing disabled");
         repairAutoDisabledConfig = prepMsg("messages.repair.config auto repairing disabled");
+		repairAutoContinuouslyDisabledConfig = prepMsg("messages.repair.config auto continuously repairing disabled");
+
+		repairContinuouslyDisabled = prepMsg("messages.repair.disabled continuousrepair");
+		repairContinuouslyEnabled = prepMsg("messages.repair.enabled continuousrepair");
+
         repairMbNotInHand = prepMsg("messages.repair.mb not in hand");
         
 		msgNotEnoughMoney = prepMsg("messages.costs.not enough money");

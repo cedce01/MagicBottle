@@ -2,11 +2,13 @@ package vontus.magicbottle;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
 import vontus.magicbottle.config.Config;
 import vontus.magicbottle.config.Messages;
@@ -128,14 +130,18 @@ public class MagicBottle {
 	private int repairNoRecreate(ItemStack i, boolean fullRepair) {
 		if (Utils.getMaterial(i) != Material.AIR) {
 			if (Config.canRepair(i)) {
-				short usedDurability = i.getDurability();
-				if (usedDurability >= DURABILITY_POINTS_PER_XP || fullRepair) {
-					int repairable = Math.min(exp * DURABILITY_POINTS_PER_XP, usedDurability);
-					int remainder = fullRepair ? repairable % 2 : 0;
-					int xpToUse = (int)Math.floor(repairable / 2) + remainder;
-					exp -= xpToUse;
-					i.setDurability((short) (i.getDurability() - repairable - remainder));
-					return xpToUse;
+				if(i.getItemMeta() instanceof Damageable){
+					Damageable damageable = (Damageable) i.getItemMeta();
+					short usedDurability = (short)damageable.getDamage();
+					if (usedDurability >= DURABILITY_POINTS_PER_XP || fullRepair) {
+						int repairable = Math.min(exp * DURABILITY_POINTS_PER_XP, usedDurability);
+						int remainder = fullRepair ? repairable % 2 : 0;
+						int xpToUse = (int)Math.floor(repairable / 2) + remainder;
+						exp -= xpToUse;
+						damageable.setDamage(Math.max(0,(damageable.getDamage() - repairable - remainder)));
+						i.setItemMeta((ItemMeta) damageable);
+						return xpToUse;
+					}
 				}
 			}
 		}
@@ -177,6 +183,7 @@ public class MagicBottle {
 		meta.setLore(tag);
 
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 		meta.addEnchant(Config.bottleEnchantment, 1, true);
 		item.setItemMeta(meta);
 	}
@@ -215,8 +222,19 @@ public class MagicBottle {
 	}
 
 	public static boolean isMagicBottle(ItemStack item) {
+		//Legacy Conversion for old bottleEnchantment
+		if(item!=null){
+			ItemMeta meta = item.getItemMeta();
+			if(meta.hasEnchant(Enchantment.DIG_SPEED)){
+				meta.removeEnchant(Enchantment.DIG_SPEED);
+				meta.addEnchant(Config.bottleEnchantment,1,true);
+				item.setItemMeta(meta);
+			}
+		}
+
+
 		return  item != null &&
-				item.containsEnchantment(Config.bottleEnchantment) &&
+				(item.containsEnchantment(Config.bottleEnchantment  )||item.containsEnchantment(Enchantment.DIG_SPEED)) &&
 				(item.getType() == materialFilled || item.getType() == materialEmpty)
 				;
 	}
@@ -256,8 +274,9 @@ public class MagicBottle {
 			meta.setLore(lore);
 			meta.addEnchant(Config.bottleEnchantment, 1, true);
 			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-
+			meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
 			is.setItemMeta(meta);
+
 		} else {
 			is = new MagicBottle(0).getItem();
 		}

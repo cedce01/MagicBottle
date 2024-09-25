@@ -10,12 +10,11 @@ import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.event.inventory.PrepareItemCraftEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
-import org.bukkit.event.player.PlayerItemDamageEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitRunnable;
 import vontus.magicbottle.config.Config;
 import vontus.magicbottle.config.Messages;
@@ -25,6 +24,10 @@ import vontus.magicbottle.util.Utils;
 
 import java.util.HashSet;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static vontus.magicbottle.Plugin.logger;
 
 public class Events implements Listener {
 	private HashSet<UUID> wait;
@@ -124,14 +127,20 @@ public class Events implements Listener {
 		Player p = e.getPlayer();
 		if (Config.repairAutoEnabled && timeOut(p)) {
 			ItemStack i = e.getItem();
-			if (plugin.autoEnabled.containsKey(p.getUniqueId().toString()) && plugin.autoEnabled.get(p.getUniqueId().toString()) && i.getDurability() % 2 != 0) {
-				if (Config.canRepair(i)) {
-					MagicBottle mb = MagicBottle.getUsableMBInInventory(p.getInventory());
-					if (mb != null && !e.isCancelled()) {
-						i.setDurability((short) (i.getDurability() + e.getDamage()));
-						mb.repair(i, false);
-						e.setCancelled(true);
-						p.updateInventory();
+			if(i.getItemMeta() instanceof Damageable){
+				if (plugin.autoEnabled.containsKey(p.getUniqueId().toString()) && plugin.autoEnabled.get(p.getUniqueId().toString()) && ((Damageable)i.getItemMeta()).getDamage() % 2 != 0) {
+					if (Config.canRepair(i)) {
+						MagicBottle mb = MagicBottle.getUsableMBInInventory(p.getInventory());
+						if (mb != null && !e.isCancelled()) {
+							if(i.getItemMeta() instanceof Damageable){
+								Damageable d = (Damageable) i.getItemMeta();
+								d.setDamage((short) (d.getDamage() + e.getDamage()));
+								i.setItemMeta((ItemMeta) d);
+								mb.repair(i, false);
+								e.setCancelled(true);
+								p.updateInventory();
+							}
+						}
 					}
 				}
 			}
@@ -139,13 +148,28 @@ public class Events implements Listener {
 	}
 
 	@EventHandler
+	public void onPlayerJoin(PlayerJoinEvent event) {
+		if(plugin.autoEnabled.get(event.getPlayer().getUniqueId().toString())!=null){
+			if(plugin.autoEnabled.get(event.getPlayer().getUniqueId().toString())){
+				if(!Messages.repairAutoWasEnabled.isEmpty()){
+					event.getPlayer().sendMessage(Messages.repairAutoWasEnabled);
+				}
+			}else{
+				if(!Messages.repairAutoWasDisabled.isEmpty()){
+					event.getPlayer().sendMessage(Messages.repairAutoWasDisabled);
+				}
+			}
+		}
+	}
+
+	@EventHandler
 	public void onPlayerLeave(PlayerQuitEvent e) {
-		plugin.autoEnabled.remove(e.getPlayer());
+		//plugin.autoEnabled.remove(e.getPlayer());
 	}
 
 	@EventHandler
 	public void onPlayerKicked(PlayerKickEvent e) {
-		plugin.autoEnabled.remove(e.getPlayer());
+		//plugin.autoEnabled.remove(e.getPlayer());
 	}
 
 	private void onInteractDeposit(MagicBottle bottle, Player p) {

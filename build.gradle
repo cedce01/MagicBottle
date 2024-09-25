@@ -5,7 +5,7 @@ plugins {
 apply plugin: 'java'
 
 group = 'vontus.magicbottle'
-version '1.5.2'
+version '1.5.4'
 String packagePath = 'vontus.magicbottle'
 
 sourceCompatibility = 1.8
@@ -42,6 +42,7 @@ dependencies {
     compileOnly "org.spigotmc:spigot-api:1.13-R0.1-SNAPSHOT"
     implementation name: 'VaultAPI-1.7.2'
     compileOnly "org.bstats:bstats-bukkit:3.0.2"
+    implementation 'org.json:json:20240303'
 }
 shadowJar {
     dependencies {

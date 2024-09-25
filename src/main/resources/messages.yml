@@ -44,13 +44,20 @@ messages:
     reload completed: '&eConfiguration reloaded.'
     level not valid: '&cLevel must be a number between 0 and 20,000.'
     given bottle: '&eGiven [amount] MagicBottle(s) to [player] with [level] levels.'
-    
+
+  join:
+    autorepair is enabled: ''
+    autorepair is disabled: ''
+
   repair:
     inventory repaired: '&eSpent &5[xp] &eXP in repairing your tools.'
     enabled autorepair: '&eAutorepair has been &aenabled&e.'
     disabled autorepair: '&eAutorepair has been &cdisabled&e.'
+    enabled continuousrepair: '&eContinuous Repair has been &aenabled&e.'
+    disabled continuousrepair: '&eContinuous Repair has been &cdisabled&e.'
     config repairing disabled: '&cRepairing is disabled in this server.'
     config auto repairing disabled: '&cAutomatic repairing is disabled in this server.'
+    config auto continuously repairing disabled: '&cAutomatic repairing continuously is disabled in this server.'
     mb not in hand: '&cYou must have a MagicBottle with experience in your main hand to use this command.'
 
   costs:

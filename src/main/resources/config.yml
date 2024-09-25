@@ -61,6 +61,8 @@ repair:
   enabled: true
   # Enable or disable the '/mb repair auto' command
   auto: true
+  # Enable or disable the '/mb repair continuously command'
+  continuously : true
   # Tools and armor will need this enchantment in order to be able to repair them
   # Set this to ANY if you want MagicBottle to repair any repairable tool (unenchanted tools will be repaired too)
   enchantment: MENDING
