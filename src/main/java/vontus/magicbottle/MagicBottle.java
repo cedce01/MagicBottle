@@ -225,7 +225,7 @@ public class MagicBottle {
 		//Legacy Conversion for old bottleEnchantment
 		if(item!=null){
 			ItemMeta meta = item.getItemMeta();
-			if(meta.hasEnchant(Enchantment.DIG_SPEED)){
+			if(meta.hasEnchant(Enchantment.DIG_SPEED) && (item.getType() == materialFilled || item.getType() == materialEmpty)){
 				meta.removeEnchant(Enchantment.DIG_SPEED);
 				meta.addEnchant(Config.bottleEnchantment,1,true);
 				item.setItemMeta(meta);
