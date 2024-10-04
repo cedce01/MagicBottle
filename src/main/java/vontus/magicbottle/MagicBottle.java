@@ -130,17 +130,19 @@ public class MagicBottle {
 	private int repairNoRecreate(ItemStack i, boolean fullRepair) {
 		if (Utils.getMaterial(i) != Material.AIR) {
 			if (Config.canRepair(i)) {
-				if(i.getItemMeta() instanceof Damageable){
-					Damageable damageable = (Damageable) i.getItemMeta();
-					short usedDurability = (short)damageable.getDamage();
-					if (usedDurability >= DURABILITY_POINTS_PER_XP || fullRepair) {
-						int repairable = Math.min(exp * DURABILITY_POINTS_PER_XP, usedDurability);
-						int remainder = fullRepair ? repairable % 2 : 0;
-						int xpToUse = (int)Math.floor(repairable / 2) + remainder;
-						exp -= xpToUse;
-						damageable.setDamage(Math.max(0,(damageable.getDamage() - repairable - remainder)));
-						i.setItemMeta((ItemMeta) damageable);
-						return xpToUse;
+				if(i.hasItemMeta()){
+					if(i.getItemMeta() instanceof Damageable){
+						Damageable damageable = (Damageable) i.getItemMeta();
+						short usedDurability = (short)damageable.getDamage();
+						if (usedDurability >= DURABILITY_POINTS_PER_XP || fullRepair) {
+							int repairable = Math.min(exp * DURABILITY_POINTS_PER_XP, usedDurability);
+							int remainder = fullRepair ? repairable % 2 : 0;
+							int xpToUse = (int)Math.floor(repairable / 2) + remainder;
+							exp -= xpToUse;
+							damageable.setDamage(Math.max(0,(damageable.getDamage() - repairable - remainder)));
+							i.setItemMeta((ItemMeta) damageable);
+							return xpToUse;
+						}
 					}
 				}
 			}
@@ -212,9 +214,11 @@ public class MagicBottle {
 	}
 
 	private static int calculateExp(ItemStack item) {
-		int exp;
+		int exp = 0;
 		try {
-			exp = Integer.valueOf(ChatColor.stripColor((item.getItemMeta().getLore().get(XP_LINE).trim())).replace(",", ""));
+			if(item.hasItemMeta()){
+				exp = Integer.valueOf(ChatColor.stripColor((item.getItemMeta().getLore().get(XP_LINE).trim())).replace(",", ""));
+			}
 		} catch (Exception exception) {
 			exp = 0;
 		}
@@ -223,12 +227,14 @@ public class MagicBottle {
 
 	public static boolean isMagicBottle(ItemStack item) {
 		//Legacy Conversion for old bottleEnchantment
-		if(item!=null){
-			ItemMeta meta = item.getItemMeta();
-			if(meta.hasEnchant(Enchantment.DIG_SPEED) && (item.getType() == materialFilled || item.getType() == materialEmpty)){
-				meta.removeEnchant(Enchantment.DIG_SPEED);
-				meta.addEnchant(Config.bottleEnchantment,1,true);
-				item.setItemMeta(meta);
+		if(item!=null ){
+			if(item.hasItemMeta()){
+				ItemMeta meta = item.getItemMeta();
+				if(meta.hasEnchant(Enchantment.DIG_SPEED) && (item.getType() == materialFilled || item.getType() == materialEmpty)){
+					meta.removeEnchant(Enchantment.DIG_SPEED);
+					meta.addEnchant(Config.bottleEnchantment,1,true);
+					item.setItemMeta(meta);
+				}
 			}
 		}
 

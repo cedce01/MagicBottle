@@ -127,18 +127,20 @@ public class Events implements Listener {
 		Player p = e.getPlayer();
 		if (Config.repairAutoEnabled && timeOut(p)) {
 			ItemStack i = e.getItem();
-			if(i.getItemMeta() instanceof Damageable){
-				if (plugin.autoEnabled.containsKey(p.getUniqueId().toString()) && plugin.autoEnabled.get(p.getUniqueId().toString()) && ((Damageable)i.getItemMeta()).getDamage() % 2 != 0) {
-					if (Config.canRepair(i)) {
-						MagicBottle mb = MagicBottle.getUsableMBInInventory(p.getInventory());
-						if (mb != null && !e.isCancelled()) {
-							if(i.getItemMeta() instanceof Damageable){
-								Damageable d = (Damageable) i.getItemMeta();
-								d.setDamage((short) (d.getDamage() + e.getDamage()));
-								i.setItemMeta((ItemMeta) d);
-								mb.repair(i, false);
-								e.setCancelled(true);
-								p.updateInventory();
+			if(i.hasItemMeta()){
+				if(i.getItemMeta() instanceof Damageable){
+					if (plugin.autoEnabled.containsKey(p.getUniqueId().toString()) && plugin.autoEnabled.get(p.getUniqueId().toString()) && ((Damageable)i.getItemMeta()).getDamage() % 2 != 0) {
+						if (Config.canRepair(i)) {
+							MagicBottle mb = MagicBottle.getUsableMBInInventory(p.getInventory());
+							if (mb != null && !e.isCancelled()) {
+								if(i.getItemMeta() instanceof Damageable){
+									Damageable d = (Damageable) i.getItemMeta();
+									d.setDamage((short) (d.getDamage() + e.getDamage()));
+									i.setItemMeta((ItemMeta) d);
+									mb.repair(i, false);
+									e.setCancelled(true);
+									p.updateInventory();
+								}
 							}
 						}
 					}
