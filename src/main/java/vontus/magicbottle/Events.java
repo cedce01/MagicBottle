@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
@@ -135,7 +136,7 @@ public class Events implements Listener {
 							if (mb != null && !e.isCancelled()) {
 								if(i.getItemMeta() instanceof Damageable){
 									Damageable d = (Damageable) i.getItemMeta();
-									d.setDamage((short) (d.getDamage() + e.getDamage()));
+									d.setDamage(Math.max(0,(short) (d.getDamage() + e.getDamage()))); //Not sure how this even could be negative "At least in vanilla"
 									i.setItemMeta((ItemMeta) d);
 									mb.repair(i, false);
 									e.setCancelled(true);
@@ -143,6 +144,21 @@ public class Events implements Listener {
 								}
 							}
 						}
+					}
+				}
+			}
+		}
+	}
+
+	@EventHandler
+	public void handlePlayerDamage(EntityDamageEvent event){
+		if(event.getEntity() instanceof Player){
+			Player p = (Player) event.getEntity();
+			if (plugin.autoEnabled.containsKey(p.getUniqueId().toString()) && plugin.autoEnabled.get(p.getUniqueId().toString())) {
+				MagicBottle mb = MagicBottle.getUsableMBInInventory(p.getInventory());
+				if(mb != null){
+					for (int i = 0; i < 4; i++) {
+						mb.repair(p.getInventory().getArmorContents()[i],true);
 					}
 				}
 			}

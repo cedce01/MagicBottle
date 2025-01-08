@@ -5,7 +5,7 @@ plugins {
 apply plugin: 'java'
 
 group = 'vontus.magicbottle'
-version '1.5.4'
+version '1.5.5'
 String packagePath = 'vontus.magicbottle'
 
 sourceCompatibility = 1.8

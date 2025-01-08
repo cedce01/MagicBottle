@@ -114,6 +114,9 @@ public class MagicBottle {
 		usedXP += repairNoRecreate(inv.getItemInOffHand(), fullRepair);
 		for (int i = 0; i < inv.getSize(); i++) {
 			usedXP += repairNoRecreate(inv.getItem(i), fullRepair);
+			//if(inv.getItem(i)!=null) {
+			//	System.out.println("got dammit Inv" + inv.getItem(i).toString());
+			//}
 		}
 		recreate();
 		return usedXP;
