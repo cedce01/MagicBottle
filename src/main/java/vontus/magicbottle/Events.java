@@ -138,7 +138,7 @@ public class Events implements Listener {
 									Damageable d = (Damageable) i.getItemMeta();
 									d.setDamage(Math.max(0,(short) (d.getDamage() + e.getDamage()))); //Not sure how this even could be negative "At least in vanilla"
 									i.setItemMeta((ItemMeta) d);
-									mb.repair(i, false);
+									plugin.incrementSpentXp(mb.repair(i, false));
 									e.setCancelled(true);
 									p.updateInventory();
 								}
@@ -158,7 +158,7 @@ public class Events implements Listener {
 				MagicBottle mb = MagicBottle.getUsableMBInInventory(p.getInventory());
 				if(mb != null){
 					for (int i = 0; i < 4; i++) {
-						mb.repair(p.getInventory().getArmorContents()[i],true);
+						plugin.incrementSpentXp(mb.repair(p.getInventory().getArmorContents()[i],true));
 					}
 				}
 			}
@@ -273,19 +273,20 @@ public class Events implements Listener {
 	}
 
 	private boolean timeOut(Player p) {
-		if (!wait.contains(p.getUniqueId())) {
-			wait.add(p.getUniqueId());
-			new BukkitRunnable() {
-
-				@Override
-				public void run() {
-					wait.remove(p.getUniqueId());
-				}
-			}.runTaskLater(this.plugin, 3);
-			return true;
-		} else {
-			return false;
-		}
+		return true;
+//		if (!wait.contains(p.getUniqueId())) {
+//			wait.add(p.getUniqueId());
+//			new BukkitRunnable() {
+//
+//				@Override
+//				public void run() {
+//					wait.remove(p.getUniqueId());
+//				}
+//			}.runTaskLater(this.plugin, 3);
+//			return true;
+//		} else {
+//			return false;
+//		}
 	}
 
 	private boolean isEmptyBottleRecipe(CraftingInventory inv) {

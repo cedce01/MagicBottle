@@ -6,6 +6,8 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 import vontus.magicbottle.Plugin;
 import vontus.magicbottle.util.Exp;
 
@@ -91,14 +93,18 @@ public class Config {
 //		} else {
 //			bottleEnchantment = EnchantGlow.getGlow();
 //		} TODO test
-        bottleEnchantment = Enchantment.DURABILITY;
+        bottleEnchantment = Enchantment.UNBREAKING;
 	}
 
 	public static boolean canRepair(ItemStack is) {
+		ItemMeta meta = is.getItemMeta();
+		if (!(meta instanceof Damageable dmg)) {
+			return false;
+		}
 		return (repairEnabled || repairAutoEnabled)
 				&& repairEnchantment.canRepair(is)
 				&& is.getType().getMaxDurability() > 0
-				&& is.getDurability() > 0;
+				&& dmg.getDamage() > 0;
 	}
 
 	public static Material getBottleRecipeIngredient(int pos) {

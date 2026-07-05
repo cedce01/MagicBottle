@@ -6,8 +6,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.json.JSONObject;
-import org.json.JSONArray;
 import org.json.simple.parser.JSONParser;
 import vontus.magicbottle.config.Config;
 import vontus.magicbottle.config.Messages;
@@ -166,6 +164,7 @@ public class Commands implements CommandExecutor {
 				if (MagicBottle.isUsableMagicBottle(inHand)) {
 					MagicBottle mb = new MagicBottle(inHand);
 					Integer usedXP = mb.repair(p.getInventory(), true);
+					plugin.incrementSpentXp(usedXP);
 					p.updateInventory();
 					p.sendMessage(Messages.repairInvRepaired.replace("[xp]", usedXP.toString()));
 				} else {

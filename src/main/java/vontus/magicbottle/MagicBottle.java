@@ -188,7 +188,7 @@ public class MagicBottle {
 		meta.setLore(tag);
 
 		meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-		meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+		//meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);//TODO Look into it
 		meta.addEnchant(Config.bottleEnchantment, 1, true);
 		item.setItemMeta(meta);
 	}
@@ -233,8 +233,8 @@ public class MagicBottle {
 		if(item!=null ){
 			if(item.hasItemMeta()){
 				ItemMeta meta = item.getItemMeta();
-				if(meta.hasEnchant(Enchantment.DIG_SPEED) && (item.getType() == materialFilled || item.getType() == materialEmpty)){
-					meta.removeEnchant(Enchantment.DIG_SPEED);
+				if(meta.hasEnchant(Enchantment.EFFICIENCY) && (item.getType() == materialFilled || item.getType() == materialEmpty)){
+					meta.removeEnchant(Enchantment.EFFICIENCY);
 					meta.addEnchant(Config.bottleEnchantment,1,true);
 					item.setItemMeta(meta);
 				}
@@ -243,7 +243,7 @@ public class MagicBottle {
 
 
 		return  item != null &&
-				(item.containsEnchantment(Config.bottleEnchantment  )||item.containsEnchantment(Enchantment.DIG_SPEED)) &&
+				(item.containsEnchantment(Config.bottleEnchantment  )||item.containsEnchantment(Enchantment.EFFICIENCY)) &&
 				(item.getType() == materialFilled || item.getType() == materialEmpty)
 				;
 	}
@@ -283,7 +283,7 @@ public class MagicBottle {
 			meta.setLore(lore);
 			meta.addEnchant(Config.bottleEnchantment, 1, true);
 			meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-			meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+			//meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);//TODO Look into it
 			is.setItemMeta(meta);
 
 		} else {

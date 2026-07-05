@@ -1,9 +1,11 @@
 name: MagicBottle
 
 main: vontus.magicbottle.Plugin
-version: 1.5.4
+version: 1.5.5
 api-version: 1.13
 author: Vontus
+
+folia-supported: true
 
 commands:
   magicbottle:
