@@ -1,5 +1,5 @@
 # MagicBottle
-An easy-to-use Minecraft Bukkit plugin for storing player experience in glass bottles.
+An easy-to-use Minecraft Bukkit/Folia plugin for storing player experience in glass bottles.
 ~~[Link to Spigot](https://www.spigotmc.org/resources/magicbottle.40039/)~~ (The original Project is now vibe coded D:)
 ## Usage
 1. Craft a MagicBottle using the recipe below (it can be changed in the plugin config)
