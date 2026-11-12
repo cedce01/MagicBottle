@@ -16,6 +16,7 @@ import org.bukkit.inventory.CraftingInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.permissions.Permission;
 import org.bukkit.scheduler.BukkitRunnable;
 import vontus.magicbottle.config.Config;
 import vontus.magicbottle.config.Messages;
@@ -190,6 +191,37 @@ public class Events implements Listener {
 		//plugin.autoEnabled.remove(e.getPlayer());
 	}
 
+	@EventHandler
+	public void onLevelChange(PlayerLevelChangeEvent event) {
+		Player p = event.getPlayer();
+
+		int oldLevel = event.getOldLevel();
+		int newLevel = event.getNewLevel();
+		if(newLevel > oldLevel){
+			//AutoDeposit
+			if(p.hasPermission(Config.permAutoDeposit) && plugin.autoDeposit.containsKey(p.getName())){
+				MagicBottle mb = MagicBottle.getNonFullMBInInventory(p);
+				if(mb != null){
+					int xp = Exp.getExpToLevel(p,plugin.autoDeposit.get(p.getName()));
+					if(xp < 0){
+						mb.deposit(p,-xp,true);
+					}
+				}
+			}
+		} else if (newLevel < oldLevel) {
+			//AutoWithdraw
+			if(p.hasPermission(Config.permAutoWithdraw) && plugin.autoWithdraw.containsKey(p.getName())){
+				MagicBottle mb = MagicBottle.getUsableMBInInventory(p.getInventory());
+				if(mb != null){
+					int xp = Exp.getExpToLevel(p,plugin.autoWithdraw.get(p.getName()));
+					if(xp > 0){
+						mb.withdraw(p,xp,true);
+					}
+				}
+			}
+		}
+	}
+
 	private void onInteractDeposit(MagicBottle bottle, Player p) {
 		if (Exp.getPoints(p) > 0) {
 			if (p.hasPermission(Config.permDeposit)) {
@@ -197,7 +229,7 @@ public class Events implements Listener {
 				int targetPlayerLevel = Exp.floorLevel(p, round);
 				int expToDeposit = Exp.getExpToLevel(p, targetPlayerLevel) * -1;
 
-				bottle.deposit(p, expToDeposit);
+				bottle.deposit(p, expToDeposit,false);
 			} else
 				p.sendMessage(Messages.msgUnauthorizedToDeposit);
 		}
@@ -210,7 +242,7 @@ public class Events implements Listener {
 				int targetPlayerLevel = Exp.ceilingLevel(p, round);
 				int expToWithdraw = Exp.getExpToLevel(p, targetPlayerLevel);
 
-				bottle.withdraw(p, expToWithdraw);
+				bottle.withdraw(p, expToWithdraw,false);
 			} else {
 				p.sendMessage(Messages.msgUnauthorizedToWithdraw);
 			}
@@ -243,7 +275,7 @@ public class Events implements Listener {
 		ItemStack i = getFirstIngredient(e.getInventory());
 		if (i != null && i.getAmount() == 1 && Config.recipePour && player.hasPermission(Config.permWithdraw)) {
 			MagicBottle bottle = new MagicBottle(i);
-			bottle.withdraw(player, bottle.getExp());
+			bottle.withdraw(player, bottle.getExp(),false);
 			e.getInventory().setResult(new MagicBottle(0).getItem());
 		} else {
 			e.setCancelled(true);
@@ -256,7 +288,7 @@ public class Events implements Listener {
 		if (ingredient != null && ingredient.getAmount() == 1 && Exp.getPoints(player) > 0 && player.hasPermission(Config.permDeposit)
 				&& Config.recipeFill) {
 			MagicBottle bottle = new MagicBottle(0);
-			bottle.deposit(player, Exp.getPoints(player));
+			bottle.deposit(player, Exp.getPoints(player),false);
 			e.getInventory().setResult(bottle.getItem());
 		} else {
 			e.setCancelled(true);

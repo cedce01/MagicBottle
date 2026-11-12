@@ -49,10 +49,10 @@ tasks {
 
 
 
-    // Spigot/Paper jar
+    // Folia/Spigot
     val pluginJar = register<ShadowJar>("pluginJar") {
         archiveBaseName.set("MagicBottle")
-        archiveClassifier.set("spigot")
+        archiveClassifier.set("Folia")
 
         from("src/main/resources/plugin.yml") {
             expand(

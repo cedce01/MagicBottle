@@ -1,7 +1,6 @@
 package vontus.magicbottle.config;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.util.ArrayList;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -20,6 +19,12 @@ public class Messages {
 	
 	public static String msgUnauthorizedToDeposit;
 	public static String msgUnauthorizedToWithdraw;
+	public static String msgUnauthorizedToAutoDeposit;
+	public static String msgUnauthorizedToAutoWithdraw;
+	public static String msgEnabledAutoDeposit;
+	public static String msgEnabledAutoWithdraw;
+	public static String msgDisabledAutoDeposit;
+	public static String msgDisabledAutoWithdraw;
 	public static String msgUnauthorizedToUseCommand;
 	public static String msgUnauthorizedToCraft;
 	
@@ -67,6 +72,16 @@ public class Messages {
 		
 		msgUnauthorizedToDeposit = prepMsg("messages.unauthorized.deposit");
 		msgUnauthorizedToWithdraw = prepMsg("messages.unauthorized.withdraw");
+
+		msgUnauthorizedToAutoDeposit = prepMsg("messages.unauthorized.autodeposit");
+		msgUnauthorizedToAutoWithdraw = prepMsg("messages.unauthorized.autowithdraw");
+
+		msgDisabledAutoDeposit = prepMsg("messages.commands.disabled autodeposit");
+		msgDisabledAutoWithdraw = prepMsg("messages.commands.disabled autowithdraw");
+
+		msgEnabledAutoDeposit = prepMsg("messages.commands.enabled autodeposit");
+		msgEnabledAutoWithdraw = prepMsg("messages.commands.enabled autowithdraw");
+
 		msgUnauthorizedToUseCommand = prepMsg("messages.unauthorized.command");
 		msgUnauthorizedToCraft = prepMsg("messages.unauthorized.craft");
 		

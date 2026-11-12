@@ -23,9 +23,11 @@ import org.bstats.bukkit.Metrics;
 public class Plugin extends JavaPlugin {
 	public static Logger logger;
 	public Map<String,Boolean> autoEnabled = new HashMap<>();
+	public Map<String, Integer> autoDeposit = new HashMap<>();
+	public Map<String, Integer> autoWithdraw = new HashMap<>();
 	Economy econ = null;
 
-	int spentXp;
+	int spentXp = 0;
 
 	public void incrementSpentXp(int xp){
 		spentXp += xp;

@@ -1,7 +1,7 @@
 name: MagicBottle
 
 main: vontus.magicbottle.Plugin
-version: 1.5.5
+version: 1.5.7
 api-version: 1.13
 author: Vontus
 
@@ -22,6 +22,12 @@ permissions:
   magicbottle.action.withdraw:
     description: 'Allows a player to take experience from MagicBottles'
     default: true
+  magicbottle.action.autodeposit:
+    description: 'Allows a player to save experience in MagicBottles automatically'
+    default: false
+  magicbottle.action.autowithdraw:
+    description: 'Allows a player to take experience from MagicBottles automatically'
+    default: false
   magicbottle.command.repair:
     description: 'Allows a player to repair tools using bottled XP'
     default: true

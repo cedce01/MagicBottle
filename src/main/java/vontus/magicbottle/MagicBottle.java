@@ -75,7 +75,7 @@ public class MagicBottle {
 		return exp <= 0;
 	}
 	
-	public void deposit(Player player, int points) {
+	public void deposit(Player player, int points, boolean silent) {
 		points = getMaxFillablePoints(player, points);
 		
 		if (points > 0) {
@@ -83,11 +83,15 @@ public class MagicBottle {
 			exp += points - expCost;
 			Exp.setPoints(player, Exp.getPoints(player) - points);
 			recreate();
-			SoundEffect.fillBottle(player);
+			if(!silent){
+				SoundEffect.fillBottle(player);
+			}
 		} else {
 			int maxLevels = Config.getMaxLevelsFor(player);
 			player.sendMessage(Messages.msgMaxLevelReached.replace("[level]", Integer.toString(maxLevels)));
-			SoundEffect.forbidden(player);
+			if(!silent){
+				SoundEffect.forbidden(player);
+			}
 		}
 	}
 	
@@ -99,12 +103,14 @@ public class MagicBottle {
 		}
 	}
 	
-	public int withdraw(Player player, int points) {
+	public int withdraw(Player player, int points, boolean silent) {
 		points = Math.min(exp, points);
 		exp -= points;
 		Exp.givePoints(player, points);
 		recreate();
-		SoundEffect.pourBottle(player);
+		if(!silent){
+			SoundEffect.pourBottle(player);
+		}
 		return points;
 	}
 	
@@ -262,6 +268,18 @@ public class MagicBottle {
 			if (isUsableMagicBottle(item)) {
 				MagicBottle mb = new MagicBottle(item);
 				if (!mb.isEmpty())
+					return mb;
+			}
+		}
+		return null;
+	}
+
+	public static MagicBottle getNonFullMBInInventory(Player player){
+		Inventory inv = player.getInventory();
+		for (ItemStack item : inv) {
+			if (isUsableMagicBottle(item)) {
+				MagicBottle mb = new MagicBottle(item);
+				if (mb.getMaxFillablePoints(player, 1) > 0)
 					return mb;
 			}
 		}

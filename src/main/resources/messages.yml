@@ -36,6 +36,8 @@ messages:
   unauthorized:
     deposit: '&cYou do not have permission to save experience.'
     withdraw: '&cYou do not have permission to take experience.'
+    autodeposit: '&cYou do not have permission to save experience automatically.'
+    autowithdraw: '&cYou do not have permission to take experience automatically.'
     command: '&cYou do not have permission to use that command.'
     craft: '&cYou do not have permission to craft that.'
     
@@ -44,6 +46,10 @@ messages:
     reload completed: '&eConfiguration reloaded.'
     level not valid: '&cLevel must be a number between 0 and 20,000.'
     given bottle: '&eGiven [amount] MagicBottle(s) to [player] with [level] levels.'
+    disabled autowithdraw: '&e auto withdraw disabled'
+    disabled autodeposit: '&e auto deposit disabled'
+    enabled autowithdraw: '&e set auto withdraw to [level] levels'
+    enabled autodeposit: '&e set auto deposit to [level] levels'
 
   join:
     autorepair is enabled: ''

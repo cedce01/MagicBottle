@@ -1,6 +1,6 @@
 # MagicBottle
 An easy-to-use Minecraft Bukkit plugin for storing player experience in glass bottles.
-[Link to Spigot](https://www.spigotmc.org/resources/magicbottle.40039/)
+~~[Link to Spigot](https://www.spigotmc.org/resources/magicbottle.40039/)~~ (The original Project is now vibe coded D:)
 ## Usage
 1. Craft a MagicBottle using the recipe below (it can be changed in the plugin config)
 >![recipe](http://i.imgur.com/WBsIxcD.png)
@@ -18,7 +18,7 @@ An easy-to-use Minecraft Bukkit plugin for storing player experience in glass bo
 2. Start the server.
 3. TA-DA!
 ## Configuration
-You can find the default configuration [here](https://github.com/Vontus/MagicBottle/blob/master/src/main/resources/config.yml).
+You can find the default configuration [here](https://github.com/cedce01/MagicBottle/tree/master/src/main/resources).
 Everything you need to know is documented in it.
 ## Permissions
 - **magicbottle.action.craft**
@@ -30,6 +30,12 @@ Everything you need to know is documented in it.
 - **magicbottle.action.withdraw**
 	- Allows you to withdraw experience from MagicBottles.
 	- Players have this permission by default.
+- **magicbottle.action.autodeposit**
+	- Allows you to deposit experience in MagicBottles automatically.
+	- Players do not have this permission by default.
+- **magicbottle.action.autowithdraw**
+	- Allows you to withdraw experience from MagicBottles automatically.
+	- Players do not have this permission by default.
 - **magicbottle.command.give**
 	- Admin command. Gives you or another player a number of bottles of a certain level.
 - **magicbottle.command.reload**

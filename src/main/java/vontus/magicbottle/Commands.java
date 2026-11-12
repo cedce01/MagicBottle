@@ -27,6 +27,9 @@ public class Commands implements CommandExecutor {
 	private final String USAGE_REPAIR = "/magicbottle repair [auto|continuously]";
 	private final String USAGE_GIVE = "/magicbottle give <level> [amount] [player]";
 	private final String USAGE_RELOAD = "/magicbottle reload";
+	private final String USAGE_AUTO_WITHDRAW = "/magicbottle autoWithdraw <level>";
+	private final String USAGE_AUTO_DEPOSIT = "/magicbottle autoDeposit <level>";
+
 
 	Commands(Plugin plugin) {
 		this.plugin = plugin;
@@ -37,21 +40,27 @@ public class Commands implements CommandExecutor {
 		if (command.getName().equalsIgnoreCase("magicbottle")) {
 			if (argument.length > 0) {
 				switch (argument[0]) {
-				case "about":
-					about(sender);
-					break;
-				case "reload":
-					reload(sender);
-					break;
-				case "give":
-					give(sender, argument);
-					break;
-				case "repair":
-					repair(sender, argument);
-					break;
-				default:
-					sendMenu(sender);
-				}
+					case "about":
+						about(sender);
+						break;
+					case "reload":
+						reload(sender);
+						break;
+					case "give":
+						give(sender, argument);
+						break;
+					case "repair":
+						repair(sender, argument);
+						break;
+					case "autoDeposit":
+						commandAutoDeposit(sender, argument);
+						break;
+					case "autoWithdraw":
+						commandAutoWithdraw(sender, argument);
+						break;
+					default:
+						sendMenu(sender);
+					}
 			} else {
 				sendMenu(sender);
 			}
@@ -156,6 +165,70 @@ public class Commands implements CommandExecutor {
 		}
 	}
 
+	private void diableAutoWithdraw(CommandSender p){
+
+		if(plugin.autoWithdraw.containsKey(p.getName())){
+			plugin.autoWithdraw.remove(p.getName());
+			p.sendMessage(Messages.msgDisabledAutoWithdraw);
+		}
+	}
+
+	private void enableAutoWithdraw(CommandSender p, Integer level){
+		p.sendMessage(Messages.msgEnabledAutoWithdraw.replace(Messages.levelReplacer,level.toString()));
+		plugin.autoWithdraw.put(p.getName(), level);
+	}
+
+	private void diableAutoDeposit(CommandSender p){
+		if(plugin.autoDeposit.containsKey(p.getName())){
+			plugin.autoDeposit.remove(p.getName());
+			p.sendMessage(Messages.msgDisabledAutoDeposit);
+		}
+	}
+
+	private void enableAutoDeposit(CommandSender p, Integer level){
+		p.sendMessage(Messages.msgEnabledAutoDeposit.replace(Messages.levelReplacer,level.toString()));
+		plugin.autoDeposit.put(p.getName(), level);
+	}
+
+	private void commandAutoWithdraw(CommandSender p, String[] arg){
+		if(p.hasPermission(Config.permAutoWithdraw)){
+			int level;
+			if(arg.length == 1){
+				diableAutoWithdraw(p);
+			} else if (arg.length == 2) {
+				try {
+					level = Integer.parseInt(arg[1]);
+					enableAutoWithdraw(p,level);
+					diableAutoDeposit(p);
+				} catch (NumberFormatException e) {
+					p.sendMessage("Level should be a number");
+				}
+			}
+		}else{
+			p.sendMessage(Messages.msgUnauthorizedToAutoWithdraw);
+		}
+	}
+
+	private void commandAutoDeposit(CommandSender p, String[] arg){
+		if(p.hasPermission(Config.permAutoDeposit)){
+			int level;
+			if(arg.length == 1){
+				diableAutoDeposit(p);
+			} else if (arg.length == 2) {
+				try {
+					level = Integer.parseInt(arg[1]);
+					enableAutoDeposit(p,level);
+					diableAutoWithdraw(p);
+				}
+				catch (NumberFormatException e) {
+					p.sendMessage("Level should be a number");
+				}
+			}
+		}else{
+			p.sendMessage(Messages.msgUnauthorizedToAutoDeposit);
+		}
+	}
+
 	private void commandRepairInventory(Player p) {
 		if (Config.repairEnabled) {
 			if (p.hasPermission(Config.permRepair)) {
@@ -253,6 +326,12 @@ public class Commands implements CommandExecutor {
 		}
 		if (sender.hasPermission(Config.permRepair)) {
 			sender.sendMessage(ChatColor.YELLOW + " " + USAGE_REPAIR);
+		}
+		if(sender.hasPermission(Config.permAutoDeposit)){
+			sender.sendMessage(ChatColor.YELLOW + " " + USAGE_AUTO_DEPOSIT);
+		}
+		if(sender.hasPermission(Config.permAutoWithdraw)){
+			sender.sendMessage(ChatColor.YELLOW + " " + USAGE_AUTO_WITHDRAW);
 		}
 	}
 	

@@ -23,6 +23,8 @@ public class Config {
 
 	public static final String permDeposit = "magicbottle.action.deposit";
 	public static final String permWithdraw = "magicbottle.action.withdraw";
+	public static final String permAutoDeposit = "magicbottle.action.autodeposit";
+	public static final String permAutoWithdraw = "magicbottle.action.autowithdraw";
 	public static final String permCraft = "magicbottle.action.craft";
 	public static final String permGive = "magicbottle.command.give";
 	public static final String permReload = "magicbottle.command.reload";
